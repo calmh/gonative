@@ -14,14 +14,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/inconshreveable/go-update"
+	update "github.com/inconshreveable/go-update"
 	"github.com/inconshreveable/go-update/check"
 )
 
 // XXX: need checksum verification on these downloads
 
-// XXX: this is hardcoded to 1.2.1 GOARM=6, sorry
-const linuxArmUrl = "https://inconshreveable.com/dl/go1.2.1.linux-arm.tar.gz"
 const oldDistUrl = "https://go.googlecode.com/files/go%s.%s.tar.gz"
 const newDistUrl = "https://storage.googleapis.com/golang/go%s.%s.tar.gz"
 const usage = `Usage: gonative [options]
@@ -43,7 +41,6 @@ directory (the current directory by default).
 var allPlatforms = []Platform{
 	Platform{"linux", "386"},
 	Platform{"linux", "amd64"},
-	Platform{"linux", "arm"},
 	Platform{"darwin", "386"},
 	Platform{"darwin", "amd64"},
 	Platform{"windows", "386"},
@@ -62,10 +59,6 @@ func (p *Platform) String() string {
 }
 
 func (p *Platform) DistUrl(version string) string {
-	if p.OS == "linux" && p.Arch == "arm" && version == "1.2.1" {
-		return linuxArmUrl
-	}
-
 	distString := p.OS + "-" + p.Arch
 	if p.OS == "darwin" {
 		distString += "-osx10.8"
