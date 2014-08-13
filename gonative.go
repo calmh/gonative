@@ -244,7 +244,7 @@ func getUrl(url, name string) (path string, err error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		return "", fmt.Errorf("Bad response for download: %v", resp.StatusCode)
+		return "", fmt.Errorf("Bad response for download of %s: %v", url, resp.StatusCode)
 	}
 
 	fmt.Printf("OK, streaming response: %s\n", url)
