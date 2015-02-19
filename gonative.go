@@ -45,8 +45,8 @@ var allPlatforms = []Platform{
 	Platform{"darwin", "amd64"},
 	Platform{"windows", "386"},
 	Platform{"windows", "amd64"},
-	Platform{"freebsd", "386"},
-	Platform{"freebsd", "amd64"},
+	//Platform{"freebsd", "386"},
+	//Platform{"freebsd", "amd64"},
 }
 
 type Platform struct {
