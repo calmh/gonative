@@ -41,12 +41,10 @@ directory (the current directory by default).
 var allPlatforms = []Platform{
 	Platform{"linux", "386"},
 	Platform{"linux", "amd64"},
-	Platform{"darwin", "386"},
 	Platform{"darwin", "amd64"},
 	Platform{"windows", "386"},
 	Platform{"windows", "amd64"},
-	//Platform{"freebsd", "386"},
-	//Platform{"freebsd", "amd64"},
+	Platform{"freebsd", "amd64"},
 }
 
 type Platform struct {
