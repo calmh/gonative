@@ -58,9 +58,6 @@ func (p *Platform) String() string {
 
 func (p *Platform) DistUrl(version string) string {
 	distString := p.OS + "-" + p.Arch
-	if p.OS == "darwin" {
-		distString += "-osx10.6"
-	}
 
 	s := fmt.Sprintf(distUrl(version), version, distString)
 	if p.OS == "windows" {
