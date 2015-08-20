@@ -13,9 +13,6 @@ import (
 	"strings"
 	"sync"
 	"time"
-
-	update "github.com/inconshreveable/go-update"
-	"github.com/inconshreveable/go-update/check"
 )
 
 // XXX: need checksum verification on these downloads
@@ -107,19 +104,8 @@ func parseArgs() (*Options, error) {
 	srcPath := flag.String("src", "", "path to go source, empty string mean fetch from internet")
 	targetPath := flag.String("target", ".", "target directory to build go in")
 	platforms := flag.String("platforms", "", "space separated list of platforms to build, emptry string means all")
-	update := flag.Bool("update", false, "ask gonative to update itself")
 
 	flag.Parse()
-
-	if *update {
-		result, err := runUpdate()
-		if err != nil {
-			fmt.Printf("Failed to update: %v\n", err)
-		} else {
-			fmt.Printf("Updated succesfully to version %v!\n", result.Version)
-		}
-		os.Exit(0)
-	}
 
 	opts := &Options{
 		version: *version,
@@ -400,38 +386,4 @@ func getPlatform(p Platform, targetPath, version string, targetReady chan struct
 func copyRecursive(src, dst string) error {
 	fmt.Printf("cp -rp %s %s\n", src, dst)
 	return exec.Command("cp", "-rp", src, dst).Run()
-}
-
-const appVersion = "0.1.7"
-const equinoxAppId = "ap_VQ_K1O_27-tPsncKE3E2GszIPm"
-const publicKey = `-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvMwGMSLLi3bfq6UZesVR
-H+/EnPyVqbVTJs3zCiFSnLrXMkOMuXfmf7mC23q1cPaGOIFTfmhcx5/vkda10NJ1
-owTAJKXVctC6TUei42vIiBSPsdhzyinNtCdkEkBT2f6Ac58OQV1dUBW/b0fQRQZN
-9tEwW7PK1QnR++bmVu2XzoGEw17XZdeDoXftDBgYAzOWDqapZpHETPobL5oQHeQN
-CVdCaNbNo52/HL6XKyDGCNudVqiKgIoExPzcOL6KKfvMla1Y4mrrArbuNBlE3qxW
-CwmnjtWg+J7vb9rKfZvuVPXPD/RoruZUmHBc1f31KB/QFvn/zXSqeyBcsd6ywCfo
-KwIDAQAB
------END PUBLIC KEY-----`
-
-func runUpdate() (*check.Result, error) {
-	params := check.Params{
-		AppVersion: appVersion,
-		AppId:      equinoxAppId,
-	}
-
-	up, err := update.New().VerifySignatureWithPEM([]byte(publicKey))
-	if err != nil {
-		return nil, err
-	}
-
-	result, err, errRecover := params.CheckAndApplyUpdate("https://api.equinox.io/1/Updates", up)
-	if err != nil {
-		if errRecover != nil {
-			return nil, fmt.Errorf("Failed to recover from bad update: %v. Original error: %v", errRecover, err)
-		}
-		return nil, err
-	}
-
-	return result, nil
 }
